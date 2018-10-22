@@ -17,7 +17,7 @@ const sendDataToBlockchain = (mydata, secret) => {
 }
 
 // get testament from blockchain
-const getDataFromBlockchain = (myIndex, secret) => {
+const getDataFromBlockchain = (hash, secret) => {
   request.get(
     {
       url: `http://localhost:${http_port}/blocks`,
@@ -25,7 +25,7 @@ const getDataFromBlockchain = (myIndex, secret) => {
     },
     (error, response, body) => {
       if (error) console.log(error)
-      const block = body.filter(b => b.index === myIndex)
+      const block = body.filter(b => b.nextHash === hash)
       const message = decrpytData(block[0], secret)
       console.log(message)
       return message
@@ -36,6 +36,8 @@ const getDataFromBlockchain = (myIndex, secret) => {
 const decrpytData = (block, secret) => CryptoJS.AES.decrypt(block.data, secret).toString(CryptoJS.enc.Utf8)
 
 const encryptData = (data, secret) =>  CryptoJS.AES.encrypt(data, secret).toString()
+
+
 
 let blockchain = []
 const sockets = []
